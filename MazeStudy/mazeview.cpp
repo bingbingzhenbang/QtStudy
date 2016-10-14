@@ -1,5 +1,5 @@
 #include "mazeview.h"
-#include <QResizeEvent>
+#include <QMouseEvent>
 
 MazeView::MazeView(QGraphicsScene *scene, QWidget *parent)
 	: QGraphicsView(scene, parent)
