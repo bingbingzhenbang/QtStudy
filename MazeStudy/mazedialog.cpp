@@ -138,27 +138,24 @@ void MazeDialog::userSelectUpdate(QPointF p)
 			return;
 		int itemx = m_xstart + currentcol * CELLLEN + CELLLEN / 2 - BLOCKLEN / 2;
 		int itemy = m_ystart + currentrow * CELLLEN + CELLLEN / 2 - BLOCKLEN / 2;
+		int nearbycnt = 0;
+		for (auto itr = m_reachcells[currentindex].begin(); itr != m_reachcells[currentindex].end(); ++itr)
+		{
+			if (m_userselect[*itr])
+				++nearbycnt;
+		}
 		if (m_userselect[currentindex])
 		{
-			m_pScene->removeItem(m_pScene->itemAt(QPoint(itemx, itemy), QTransform()));
-			m_userselect[currentindex] = 0;
+			if (nearbycnt == 1)
+			{
+				m_pScene->removeItem(m_pScene->itemAt(QPoint(itemx, itemy), QTransform()));
+				m_userselect[currentindex] = 0;
+			}
 		}
-		else
+		else if(nearbycnt)
 		{
-			bool canconnect = false;
-			for (auto itr = m_reachcells[currentindex].begin(); itr != m_reachcells[currentindex].end(); ++itr)
-			{
-				if (m_userselect[*itr])
-				{
-					canconnect = true;
-					break;
-				}
-			}
-			if (canconnect)
-			{
-				m_pScene->addRect(QRect(itemx, itemy, BLOCKLEN, BLOCKLEN), QPen(Qt::cyan), QBrush(Qt::cyan));
-				m_userselect[currentindex] = 1;
-			}
+			m_pScene->addRect(QRect(itemx, itemy, BLOCKLEN, BLOCKLEN), QPen(Qt::cyan), QBrush(Qt::cyan));
+			m_userselect[currentindex] = 1;		
 		}
 	}
 }
